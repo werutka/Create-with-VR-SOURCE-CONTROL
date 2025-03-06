@@ -1,28 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
 
 public class DoorTrigger : MonoBehaviour
 {
-    public int choiceIndex; // 0 for left door, 1 for right door
-    private MazeManager mazeManager;
+    public Transform nextRoomSpawnPoint; // Assign in Inspector
+    public GameObject player; // Assign the XR Rig (player)
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        mazeManager = FindObjectOfType<MazeManager>(); // Get reference to MazeManager
+        XRBaseInteractable interactable = GetComponent<XRBaseInteractable>();
+        interactable.selectEntered.AddListener(OnDoorClicked);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnDoorClicked(SelectEnterEventArgs args)
     {
-        
-    }
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player")) // Ensure only the player triggers it
+        if (player != null && nextRoomSpawnPoint != null)
         {
-            mazeManager.MoveToNextRoom(choiceIndex);
+            player.transform.position = nextRoomSpawnPoint.position;
         }
     }
 }
