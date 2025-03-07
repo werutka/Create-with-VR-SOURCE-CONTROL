@@ -14,6 +14,7 @@ public class AvatarFollow : MonoBehaviour
 
     void Start()
     {
+        animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
         agent.speed = moveSpeed;
     }
