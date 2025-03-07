@@ -28,11 +28,13 @@ public class AvatarFollow : MonoBehaviour
         {
             agent.SetDestination(player.position);
             animator.SetBool("isWalking", true); // Trigger walk animation
+            Debug.Log("The avatar is walking!");
         }
         else
         {
             agent.SetDestination(transform.position);
             animator.SetBool("isWalking", false); // Idle when close enough
+            Debug.Log("The avatar is not walking!");
         }
     }
 }
