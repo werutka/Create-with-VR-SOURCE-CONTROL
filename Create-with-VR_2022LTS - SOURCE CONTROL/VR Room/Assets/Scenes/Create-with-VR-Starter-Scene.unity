@@ -16547,6 +16547,7 @@ MonoBehaviour:
   - {fileID: 1602740976}
   - {fileID: 959260851}
   player: {fileID: 1313711679}
+  tokenText: {fileID: 1203300666}
 --- !u!4 &1086227052
 Transform:
   m_ObjectHideFlags: 0

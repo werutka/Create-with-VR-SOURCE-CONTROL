@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class MazeManager : MonoBehaviour
 {
@@ -9,20 +11,20 @@ public class MazeManager : MonoBehaviour
     public Transform finalRoom;             // Assign in Inspector
     public List<Transform> randomRooms;     // Assign all potential randomized rooms in Inspector
     public GameObject player;               // Assign XR Rig
+    public TMP_Text tokenText;                  // Assign in Inspector
 
     private List<Transform> roomSequence = new List<Transform>();
     private int currentRoomIndex = 0;
+    private int tokens = 0;
+
+    // Predefined sequence of avatar door suggestions (1 = Right, 0 = Left)
+    private int[] avatarDoorSequence = { 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0 };
 
     // Start is called before the first frame update
     void Start()
     {
         GenerateRoomSequence();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        UpdateTokenUI();
     }
 
     void GenerateRoomSequence()
@@ -47,9 +49,33 @@ public class MazeManager : MonoBehaviour
     {
         if (currentRoomIndex < roomSequence.Count - 1)
         {
+            ApplyTokenRules(choice);
             currentRoomIndex++;
             player.transform.position = roomSequence[currentRoomIndex].position;
         }
+    }
+
+    void ApplyTokenRules(int playerChoice)
+    {
+        int suggestedChoice = avatarDoorSequence[currentRoomIndex]; // Get correct suggestion
+
+        bool followedSuggestion = (playerChoice == suggestedChoice);
+
+        if (currentRoomIndex == 3) // 4th room (index 3)
+        {
+            tokens += followedSuggestion ? -10 : +5;
+        }
+        else
+        {
+            tokens += followedSuggestion ? +5 : -10;
+        }
+
+        UpdateTokenUI();
+    }
+
+    void UpdateTokenUI()
+    {
+        tokenText.text = "Tokens: " + tokens;
     }
 
     void ShuffleList(List<Transform> list)
