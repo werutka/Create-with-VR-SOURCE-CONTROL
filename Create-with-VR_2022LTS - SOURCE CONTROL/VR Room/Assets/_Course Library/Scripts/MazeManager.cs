@@ -4,14 +4,19 @@ using UnityEngine;
 
 public class MazeManager : MonoBehaviour
 {
-    public GameObject[] rooms; // Assign rooms in order
+    public Transform trialRoom;             // Assign in Inspector
+    public Transform investmentRoom;        // Assign in Inspector
+    public Transform finalRoom;             // Assign in Inspector
+    public List<Transform> randomRooms;     // Assign all potential randomized rooms in Inspector
+    public GameObject player;               // Assign XR Rig
+
+    private List<Transform> roomSequence = new List<Transform>();
     private int currentRoomIndex = 0;
-    private int maxChoices = 12;
 
     // Start is called before the first frame update
     void Start()
     {
-        ShowRoom(0); // Start at the first room
+        GenerateRoomSequence();
     }
 
     // Update is called once per frame
@@ -20,36 +25,41 @@ public class MazeManager : MonoBehaviour
         
     }
 
+    void GenerateRoomSequence()
+    {
+        // Ensure the correct room order
+        roomSequence.Add(trialRoom); // 1st: Trial Room
+        roomSequence.Add(investmentRoom); // 2nd: First Investment Room
+
+        // Select 12 unique random rooms (excluding trial and investment rooms)
+        List<Transform> shuffledRooms = new List<Transform>(randomRooms);
+        ShuffleList(shuffledRooms);
+        for (int i = 0; i < 12; i++)
+        {
+            roomSequence.Add(shuffledRooms[i]);
+        }
+
+        roomSequence.Add(investmentRoom); // 15th: Second Investment Room (same as first)
+        roomSequence.Add(finalRoom); // 16th: Final Room
+    }
+
     public void MoveToNextRoom(int choice)
     {
-        if (currentRoomIndex >= maxChoices - 1)
+        if (currentRoomIndex < roomSequence.Count - 1)
         {
-            Debug.Log("End of the experiment!");
-            return;
-        }
-
-        // Compute next room index based on choice
-        currentRoomIndex = (currentRoomIndex * 2) + 1 + choice;
-
-        if (currentRoomIndex < rooms.Length)
-        {
-            ShowRoom(currentRoomIndex);
-        }
-        else
-        {
-            Debug.LogError("Room index out of bounds!");
+            currentRoomIndex++;
+            player.transform.position = roomSequence[currentRoomIndex].position;
         }
     }
 
-    private void ShowRoom(int index)
+    void ShuffleList(List<Transform> list)
     {
-        // Disable all rooms first
-        foreach (var room in rooms)
+        for (int i = 0; i < list.Count; i++)
         {
-            room.SetActive(false);
+            Transform temp = list[i];
+            int randomIndex = Random.Range(i, list.Count);
+            list[i] = list[randomIndex];
+            list[randomIndex] = temp;
         }
-
-        // Enable the current room
-        rooms[index].SetActive(true);
     }
 }
