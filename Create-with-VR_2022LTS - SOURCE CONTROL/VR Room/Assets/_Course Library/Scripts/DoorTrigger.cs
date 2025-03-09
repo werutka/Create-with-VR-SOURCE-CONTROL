@@ -5,20 +5,19 @@ using UnityEngine.XR.Interaction.Toolkit;
 
 public class DoorTrigger : MonoBehaviour
 {
-    public Transform nextRoomSpawnPoint; // Assign in Inspector
-    public GameObject player; // Assign the XR Rig (player)
+    public bool isRightDoor;
+    private AvatarFollow avatar;
 
     private void Start()
     {
-        XRBaseInteractable interactable = GetComponent<XRBaseInteractable>();
-        interactable.selectEntered.AddListener(OnDoorClicked);
+        avatar = FindObjectOfType<AvatarFollow>();
     }
 
-    private void OnDoorClicked(SelectEnterEventArgs args)
+    private void OnTriggerEnter(Collider other)
     {
-        if (player != null && nextRoomSpawnPoint != null)
+        if (other.CompareTag("Player"))
         {
-            player.transform.position = nextRoomSpawnPoint.position;
+            avatar.PlayerChoice(isRightDoor);
         }
     }
 }

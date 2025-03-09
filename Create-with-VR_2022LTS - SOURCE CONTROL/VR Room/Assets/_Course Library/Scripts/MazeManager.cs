@@ -3,89 +3,62 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class MazeManager : MonoBehaviour
 {
-    public Transform trialRoom;             // Assign in Inspector
-    public Transform investmentRoom;        // Assign in Inspector
-    public Transform finalRoom;             // Assign in Inspector
-    public List<Transform> randomRooms;     // Assign all potential randomized rooms in Inspector
-    public GameObject player;               // Assign XR Rig
-    public TMP_Text tokenText;                  // Assign in Inspector
+    public static MazeManager Instance;
 
-    private List<Transform> roomSequence = new List<Transform>();
-    private int currentRoomIndex = 0;
-    private int tokens = 0;
+    private int[] mazeRoomOrder = new int[12]; // Stores randomized room order
+    private int currentMazeIndex = 0;
+    private bool[] followedAdvice = new bool[12]; // Tracks if participant followed avatar
 
-    // Predefined sequence of avatar door suggestions (1 = Right, 0 = Left)
-    private int[] avatarDoorSequence = { 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0 };
-
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
-        GenerateRoomSequence();
-        UpdateTokenUI();
-    }
-
-    void GenerateRoomSequence()
-    {
-        // Ensure the correct room order
-        roomSequence.Add(trialRoom); // 1st: Trial Room
-        roomSequence.Add(investmentRoom); // 2nd: First Investment Room
-
-        // Select 12 unique random rooms (excluding trial and investment rooms)
-        List<Transform> shuffledRooms = new List<Transform>(randomRooms);
-        ShuffleList(shuffledRooms);
-        for (int i = 0; i < 12; i++)
+        if (Instance == null)
         {
-            roomSequence.Add(shuffledRooms[i]);
-        }
-
-        roomSequence.Add(investmentRoom); // 15th: Second Investment Room (same as first)
-        roomSequence.Add(finalRoom); // 16th: Final Room
-    }
-
-    public void MoveToNextRoom(int choice)
-    {
-        if (currentRoomIndex < roomSequence.Count - 1)
-        {
-            ApplyTokenRules(choice);
-            currentRoomIndex++;
-            player.transform.position = roomSequence[currentRoomIndex].position;
-        }
-    }
-
-    void ApplyTokenRules(int playerChoice)
-    {
-        int suggestedChoice = avatarDoorSequence[currentRoomIndex]; // Get correct suggestion
-
-        bool followedSuggestion = (playerChoice == suggestedChoice);
-
-        if (currentRoomIndex == 3) // 4th room (index 3)
-        {
-            tokens += followedSuggestion ? -10 : +5;
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
-            tokens += followedSuggestion ? +5 : -10;
+            Destroy(gameObject);
         }
 
-        UpdateTokenUI();
+        GenerateMazeOrder();
     }
 
-    void UpdateTokenUI()
+    void GenerateMazeOrder()
     {
-        tokenText.text = "Tokens: " + tokens;
+        // Creates a randomized sequence of 12 rooms
+        for (int i = 0; i < 12; i++) mazeRoomOrder[i] = i + 1;
+        System.Random rng = new System.Random();
+        mazeRoomOrder = mazeRoomOrder.OrderBy(x => rng.Next()).ToArray();
     }
 
-    void ShuffleList(List<Transform> list)
+    public void LoadNextRoom()
     {
-        for (int i = 0; i < list.Count; i++)
-        {
-            Transform temp = list[i];
-            int randomIndex = Random.Range(i, list.Count);
-            list[i] = list[randomIndex];
-            list[randomIndex] = temp;
-        }
+        string nextScene = "";
+
+        if (SceneManager.GetActiveScene().name == "TutorialRoom")
+            nextScene = "InvestmentRoom";
+        else if (SceneManager.GetActiveScene().name == "InvestmentRoom" && currentMazeIndex == 0)
+            nextScene = $"MazeRoom_{mazeRoomOrder[currentMazeIndex]}";
+        else if (currentMazeIndex < 12)
+            nextScene = $"MazeRoom_{mazeRoomOrder[currentMazeIndex]}";
+        else if (currentMazeIndex == 12)
+            nextScene = "InvestmentRoom";
+        else
+            nextScene = "FinalRoom";
+
+        SceneManager.LoadScene(nextScene);
+        currentMazeIndex++;
+    }
+
+    public void LogDecision(bool followed)
+    {
+        if (currentMazeIndex < 12)
+            followedAdvice[currentMazeIndex] = followed;
     }
 }
