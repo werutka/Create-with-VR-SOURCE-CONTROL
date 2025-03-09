@@ -10,6 +10,11 @@ public class MazeManager : MonoBehaviour
 {
     public static MazeManager Instance;
 
+    public GameObject tutorialRoom;
+    public GameObject investmentRoom;
+    public GameObject finalRoom;
+    public GameObject[] mazeRooms;
+
     private int[] mazeRoomOrder = new int[12]; // Stores randomized room order
     private int currentMazeIndex = 0;
     private bool[] followedAdvice = new bool[12]; // Tracks if participant followed avatar
@@ -27,33 +32,73 @@ public class MazeManager : MonoBehaviour
         }
 
         GenerateMazeOrder();
+        ActivateRoom(tutorialRoom);
     }
 
     void GenerateMazeOrder()
     {
         // Creates a randomized sequence of 12 rooms
-        for (int i = 0; i < 12; i++) mazeRoomOrder[i] = i + 1;
+        for (int i = 0; i < 12; i++)
+        {
+            mazeRoomOrder[i] = i;
+        }
         System.Random rng = new System.Random();
         mazeRoomOrder = mazeRoomOrder.OrderBy(x => rng.Next()).ToArray();
     }
 
     public void LoadNextRoom()
     {
-        string nextScene = "";
+        DeactivateAllRooms();
 
-        if (SceneManager.GetActiveScene().name == "TutorialRoom")
-            nextScene = "InvestmentRoom";
-        else if (SceneManager.GetActiveScene().name == "InvestmentRoom" && currentMazeIndex == 0)
-            nextScene = $"MazeRoom_{mazeRoomOrder[currentMazeIndex]}";
-        else if (currentMazeIndex < 12)
-            nextScene = $"MazeRoom_{mazeRoomOrder[currentMazeIndex]}";
-        else if (currentMazeIndex == 12)
-            nextScene = "InvestmentRoom";
-        else
-            nextScene = "FinalRoom";
+        if (tutorialRoom.activeSelf)
+        {
+            ActivateRoom(investmentRoom);
+            return;
+        }
 
-        SceneManager.LoadScene(nextScene);
-        currentMazeIndex++;
+        if (investmentRoom.activeSelf && currentMazeIndex == 0)
+        {
+            ActivateRoom(mazeRooms[mazeRoomOrder[currentMazeIndex]]);
+            return;
+        }
+
+        if (currentMazeIndex < 11)
+        {
+            currentMazeIndex++;
+            ActivateRoom(mazeRooms[mazeRoomOrder[currentMazeIndex]]);
+            return;
+        }
+
+        if (currentMazeIndex == 11)
+        {
+            ActivateRoom(investmentRoom);
+            currentMazeIndex++;
+            return;
+        }
+
+        if (investmentRoom.activeSelf)
+        {
+            ActivateRoom(finalRoom);
+        }
+    }
+
+    private void ActivateRoom(GameObject room)
+    {
+        if (room != null)
+        {
+            room.SetActive(true);
+        }
+    }
+
+    private void DeactivateAllRooms()
+    {
+        tutorialRoom.SetActive(false);
+        investmentRoom.SetActive(false);
+        finalRoom.SetActive(false);
+        foreach (GameObject room in mazeRooms)
+        {
+            room.SetActive(false);
+        }
     }
 
     public void LogDecision(bool followed)
