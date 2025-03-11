@@ -13,11 +13,13 @@ public class MazeManager : MonoBehaviour
     public GameObject tutorialRoom;
     public GameObject investmentRoom;
     public GameObject finalRoom;
+    public GameObject questionnaireRoom;
     public GameObject[] mazeRooms;
 
     private int[] mazeRoomOrder = new int[12]; // Stores randomized room order
     private int currentMazeIndex = 0;
     private bool[] followedAdvice = new bool[12]; // Tracks if participant followed avatar
+    private bool isQuestionnaireNext = false; // Tracks whether next room should be questionnaire
 
     private void Awake()
     {
@@ -48,7 +50,7 @@ public class MazeManager : MonoBehaviour
 
     public void LoadNextRoom()
     {
-
+        // Tutorial room -> Investment room
         if (tutorialRoom.activeSelf)
         {
             DeactivateAllRooms();
@@ -56,26 +58,48 @@ public class MazeManager : MonoBehaviour
             return;
         }
 
-        if (investmentRoom.activeSelf && currentMazeIndex == 0)
+        if (isQuestionnaireNext)
         {
-            DeactivateAllRooms();
-            ActivateRoom(mazeRooms[mazeRoomOrder[currentMazeIndex]]);
-            return;
+            // If we were supposed to go to a questionnaire, now go to the next real room
+            isQuestionnaireNext = false;
+
+            if (currentMazeIndex == 12)
+            {
+                DeactivateAllRooms();
+                ActivateRoom(finalRoom);
+                return;
+            }
+
+            if (investmentRoom.activeSelf && currentMazeIndex == 0)
+            {
+                DeactivateAllRooms();
+                ActivateRoom(mazeRooms[mazeRoomOrder[currentMazeIndex]]);
+                return;
+            }
+
+            else if (currentMazeIndex < 11)
+            {
+                DeactivateAllRooms();
+                currentMazeIndex++;
+                ActivateRoom(mazeRooms[mazeRoomOrder[currentMazeIndex]]);
+                return;
+            }
+
+            else
+            {
+                DeactivateAllRooms();
+                ActivateRoom(investmentRoom);
+                currentMazeIndex++;
+                return;
+            }
         }
 
-        else if (currentMazeIndex < 11)
+        // If not a questionnaire, go to the questionnaire next
+        if (investmentRoom.activeSelf || mazeRooms[mazeRoomOrder[currentMazeIndex]].activeSelf)
         {
+            isQuestionnaireNext = true;
             DeactivateAllRooms();
-            currentMazeIndex++;
-            ActivateRoom(mazeRooms[mazeRoomOrder[currentMazeIndex]]);
-            return;
-        }
-
-        else if (currentMazeIndex == 11)
-        {
-            DeactivateAllRooms();
-            ActivateRoom(investmentRoom);
-            currentMazeIndex++;
+            ActivateRoom(questionnaireRoom);
             return;
         }
 
@@ -91,6 +115,12 @@ public class MazeManager : MonoBehaviour
         if (room != null)
         {
             room.SetActive(true);
+
+            // Reset canvas when the questionnaire room is activated
+            if (room == questionnaireRoom)
+            {
+                ResetQuestionnaireCanvas();
+            }
         }
     }
 
@@ -99,9 +129,19 @@ public class MazeManager : MonoBehaviour
         tutorialRoom.SetActive(false);
         investmentRoom.SetActive(false);
         finalRoom.SetActive(false);
+        questionnaireRoom.SetActive(false);
         foreach (GameObject room in mazeRooms)
         {
             room.SetActive(false);
+        }
+    }
+
+    private void ResetQuestionnaireCanvas()
+    {
+        Canvas questionnaireCanvas = questionnaireRoom.GetComponentInChildren<Canvas>(true);
+        if (questionnaireCanvas != null)
+        {
+            questionnaireCanvas.gameObject.SetActive(true);
         }
     }
 
