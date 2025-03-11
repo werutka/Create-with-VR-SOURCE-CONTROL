@@ -48,22 +48,24 @@ public class MazeManager : MonoBehaviour
 
     public void LoadNextRoom()
     {
-        DeactivateAllRooms();
 
         if (tutorialRoom.activeSelf)
         {
+            DeactivateAllRooms();
             ActivateRoom(investmentRoom);
             return;
         }
 
         if (investmentRoom.activeSelf && currentMazeIndex == 0)
         {
+            DeactivateAllRooms();
             ActivateRoom(mazeRooms[mazeRoomOrder[currentMazeIndex]]);
             return;
         }
 
         if (currentMazeIndex < 11)
         {
+            DeactivateAllRooms();
             currentMazeIndex++;
             ActivateRoom(mazeRooms[mazeRoomOrder[currentMazeIndex]]);
             return;
@@ -71,6 +73,7 @@ public class MazeManager : MonoBehaviour
 
         if (currentMazeIndex == 11)
         {
+            DeactivateAllRooms();
             ActivateRoom(investmentRoom);
             currentMazeIndex++;
             return;
@@ -78,6 +81,7 @@ public class MazeManager : MonoBehaviour
 
         if (investmentRoom.activeSelf)
         {
+            DeactivateAllRooms();
             ActivateRoom(finalRoom);
         }
     }
