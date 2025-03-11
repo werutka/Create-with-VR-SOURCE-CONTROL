@@ -63,7 +63,7 @@ public class MazeManager : MonoBehaviour
             return;
         }
 
-        if (currentMazeIndex < 11)
+        else if (currentMazeIndex < 11)
         {
             DeactivateAllRooms();
             currentMazeIndex++;
@@ -71,7 +71,7 @@ public class MazeManager : MonoBehaviour
             return;
         }
 
-        if (currentMazeIndex == 11)
+        else if (currentMazeIndex == 11)
         {
             DeactivateAllRooms();
             ActivateRoom(investmentRoom);
