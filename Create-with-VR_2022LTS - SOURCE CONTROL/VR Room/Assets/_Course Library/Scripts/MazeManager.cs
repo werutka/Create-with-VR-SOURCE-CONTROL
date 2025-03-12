@@ -15,11 +15,14 @@ public class MazeManager : MonoBehaviour
     public GameObject finalRoom;
     public GameObject questionnaireRoom;
     public GameObject[] mazeRooms;
+    public TextMeshProUGUI tokenText;
 
     private int[] mazeRoomOrder = new int[12]; // Stores randomized room order
     private int currentMazeIndex = 0;
     private bool[] followedAdvice = new bool[12]; // Tracks if participant followed avatar
     private bool isQuestionnaireNext = false; // Tracks whether next room should be questionnaire
+    private bool[] suggestionSequence = new bool[12]; // Stores randomized door suggestions
+    public int playerTokens = 50;
 
     private void Awake()
     {
@@ -46,6 +49,12 @@ public class MazeManager : MonoBehaviour
         }
         System.Random rng = new System.Random();
         mazeRoomOrder = mazeRoomOrder.OrderBy(x => rng.Next()).ToArray();
+
+        // Randomize door suggestion sequence
+        for (int i = 0; i < 12; i++)
+        {
+            suggestionSequence[i] = rng.Next(2) == 1; // Randomly set true (Right) or false (Left)
+        }
     }
 
     public void LoadNextRoom()
@@ -145,9 +154,38 @@ public class MazeManager : MonoBehaviour
         }
     }
 
+    public void AdjustTokens(bool followed)
+    {
+        if (currentMazeIndex == 3) // 4th maze room (0-based index)
+        {
+            playerTokens += followed ? -10 : 5;
+        }
+        else
+        {
+            playerTokens += followed ? 5 : -10;
+        }
+        UpdateTokenDisplay();
+    }
+
+    private void UpdateTokenDisplay()
+    {
+        tokenText.text = "Tokens: " + playerTokens;
+    }
+
     public void LogDecision(bool followed)
     {
         if (currentMazeIndex < 12)
             followedAdvice[currentMazeIndex] = followed;
+            AdjustTokens(followed);
+    }
+
+    public int GetCurrentRoomIndex()
+    {
+        return currentMazeIndex;
+    }
+
+    public bool GetAvatarSuggestionForRoom(int roomIndex)
+    {
+        return suggestionSequence[roomIndex]; // Return the suggestion for this room in the randomized sequence
     }
 }

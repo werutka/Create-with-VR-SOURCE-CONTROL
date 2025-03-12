@@ -8,11 +8,22 @@ public class AvatarFollow : MonoBehaviour
 {
     public TextMeshProUGUI suggestionText;
     private bool avatarSuggestsRightDoor;
+    private int roomIndex;
 
     private void Start()
     {
-        avatarSuggestsRightDoor = Random.value > 0.5f;
-        suggestionText.text = avatarSuggestsRightDoor ? "Take the Right Door" : "Take the Left Door";
+        roomIndex = MazeManager.Instance.GetCurrentRoomIndex();
+        avatarSuggestsRightDoor = MazeManager.Instance.GetAvatarSuggestionForRoom(roomIndex);
+
+        if (roomIndex == 4) // 5th room (after mistake)
+        {
+            suggestionText.text = "Oh sorry. I made a mistake. Let's work together to fix it. " +
+                                  (avatarSuggestsRightDoor ? "Take the Right Door" : "Take the Left Door");
+        }
+        else
+        {
+            suggestionText.text = avatarSuggestsRightDoor ? "Take the Right Door" : "Take the Left Door";
+        }
     }
 
     public void PlayerChoice(bool choseRight)
