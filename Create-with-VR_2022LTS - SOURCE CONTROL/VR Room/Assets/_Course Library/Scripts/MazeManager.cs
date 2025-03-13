@@ -79,14 +79,30 @@ public class MazeManager : MonoBehaviour
             return;
         }
 
+        // After second investment room, go to the final questionnaire and then the final room
+        if (investmentRoom.activeSelf && currentMazeIndex == 13)
+        {
+            DeactivateAllRooms();
+            ActivateRoom(questionnaireRoom);
+            return;
+        }
+
+        if (questionnaireRoom.activeSelf && currentMazeIndex == 13)
+        {
+            DeactivateAllRooms();
+            ActivateRoom(finalRoom);
+            return;
+        }
+
         // Handle Maze Room -> Questionnaire Room sequence
-        if (!isQuestionnaireNext)
+        if (!isQuestionnaireNext && currentMazeIndex <= 12)
         {
             // If we have completed 12 maze-questionnaire cycles, go to the second investment room
             if (currentMazeIndex == 12)
             {
                 DeactivateAllRooms();
                 ActivateRoom(investmentRoom);
+                currentMazeIndex++;
                 return;
             }
 
@@ -103,21 +119,6 @@ public class MazeManager : MonoBehaviour
             ActivateRoom(questionnaireRoom);
             isQuestionnaireNext = false;
             currentMazeIndex++;
-            return;
-        }
-
-        // After second investment room, go to the final questionnaire and then the final room
-        if (investmentRoom.activeSelf && currentMazeIndex == 12)
-        {
-            DeactivateAllRooms();
-            ActivateRoom(questionnaireRoom);
-            return;
-        }
-
-        if (questionnaireRoom.activeSelf && currentMazeIndex == 13)
-        {
-            DeactivateAllRooms();
-            ActivateRoom(finalRoom);
             return;
         }
     }
@@ -163,7 +164,9 @@ public class MazeManager : MonoBehaviour
 
     public void AdjustTokens(bool followed)
     {
-        if (currentMazeIndex == 3) // 4th maze room (0-based index)
+        int mazeRoomIndex = currentMazeIndex - 1; // Adjust because `currentMazeIndex` increments after LoadNextRoom()
+
+        if (mazeRoomIndex == 3) // 4th maze room (0-based index)
         {
             playerTokens += followed ? -10 : 5;
         }

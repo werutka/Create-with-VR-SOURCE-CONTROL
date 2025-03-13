@@ -38,7 +38,9 @@ public class TokenInvestment : MonoBehaviour
 
     public void IncreaseToken()
     {
-        if (tokenAmount < 51) // Ensure it doesn't go above the tokens that the player has
+        int availableTokens = GameObject.Find("Maze Manager").GetComponent<MazeManager>().playerTokens;
+
+        if (tokenAmount < availableTokens) // Ensure it doesn't go above the tokens that the player has
         {
             tokenAmount++;
             UpdateTokenDisplay();
