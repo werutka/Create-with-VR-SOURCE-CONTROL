@@ -25705,6 +25705,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1086227052}
   - component: {fileID: 1086227051}
+  - component: {fileID: 1086227053}
   m_Layer: 0
   m_Name: Maze Manager
   m_TagString: Untagged
@@ -25724,6 +25725,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ceea2d513375784e880b4f8f8e6c73a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 1313711679}
   tutorialRoom: {fileID: 976748236}
   investmentRoom: {fileID: 582542092}
   finalRoom: {fileID: 776825991}
@@ -25758,6 +25760,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1086227053
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1086227050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17485bcc426c5b647a62d2dc5eed6c49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1087320501
 GameObject:
   m_ObjectHideFlags: 0

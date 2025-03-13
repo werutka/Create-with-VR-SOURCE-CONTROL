@@ -10,6 +10,9 @@ public class MazeManager : MonoBehaviour
 {
     public static MazeManager Instance;
 
+    private DataLogger dataLogger;
+
+    public GameObject player;
     public GameObject tutorialRoom;
     public GameObject investmentRoom;
     public GameObject finalRoom;
@@ -26,6 +29,7 @@ public class MazeManager : MonoBehaviour
 
     private void Awake()
     {
+        dataLogger = GetComponent<DataLogger>();
         if (Instance == null)
         {
             Instance = this;
@@ -67,55 +71,54 @@ public class MazeManager : MonoBehaviour
             return;
         }
 
-        if (isQuestionnaireNext)
+        // Investment Room -> First Questionnaire Room
+        if (investmentRoom.activeSelf && currentMazeIndex == 0)
         {
-            // If we were supposed to go to a questionnaire, now go to the next real room
-            isQuestionnaireNext = false;
-
-            if (currentMazeIndex == 12)
-            {
-                DeactivateAllRooms();
-                ActivateRoom(finalRoom);
-                return;
-            }
-
-            if (investmentRoom.activeSelf && currentMazeIndex == 0)
-            {
-                DeactivateAllRooms();
-                ActivateRoom(mazeRooms[mazeRoomOrder[currentMazeIndex]]);
-                return;
-            }
-
-            else if (currentMazeIndex < 11)
-            {
-                DeactivateAllRooms();
-                currentMazeIndex++;
-                ActivateRoom(mazeRooms[mazeRoomOrder[currentMazeIndex]]);
-                return;
-            }
-
-            else
-            {
-                DeactivateAllRooms();
-                ActivateRoom(investmentRoom);
-                currentMazeIndex++;
-                return;
-            }
-        }
-
-        // If not a questionnaire, go to the questionnaire next
-        if (investmentRoom.activeSelf || mazeRooms[mazeRoomOrder[currentMazeIndex]].activeSelf)
-        {
-            isQuestionnaireNext = true;
             DeactivateAllRooms();
             ActivateRoom(questionnaireRoom);
             return;
         }
 
-        if (investmentRoom.activeSelf)
+        // Handle Maze Room -> Questionnaire Room sequence
+        if (!isQuestionnaireNext)
+        {
+            // If we have completed 12 maze-questionnaire cycles, go to the second investment room
+            if (currentMazeIndex == 12)
+            {
+                DeactivateAllRooms();
+                ActivateRoom(investmentRoom);
+                return;
+            }
+
+            // Activate the next maze room
+            DeactivateAllRooms();
+            ActivateRoom(mazeRooms[mazeRoomOrder[currentMazeIndex]]);
+            isQuestionnaireNext = true;
+            return;
+        }
+        else
+        {
+            // After a maze room, activate the questionnaire
+            DeactivateAllRooms();
+            ActivateRoom(questionnaireRoom);
+            isQuestionnaireNext = false;
+            currentMazeIndex++;
+            return;
+        }
+
+        // After second investment room, go to the final questionnaire and then the final room
+        if (investmentRoom.activeSelf && currentMazeIndex == 12)
+        {
+            DeactivateAllRooms();
+            ActivateRoom(questionnaireRoom);
+            return;
+        }
+
+        if (questionnaireRoom.activeSelf && currentMazeIndex == 13)
         {
             DeactivateAllRooms();
             ActivateRoom(finalRoom);
+            return;
         }
     }
 
@@ -124,6 +127,10 @@ public class MazeManager : MonoBehaviour
         if (room != null)
         {
             room.SetActive(true);
+            dataLogger.LogRoomEntry(); // Log timestamp when entering a room
+
+            // Reset player position
+            player.transform.position = new Vector3(-2.3f, 0f, 0f);
 
             // Reset canvas when the questionnaire room is activated
             if (room == questionnaireRoom)
@@ -175,8 +182,13 @@ public class MazeManager : MonoBehaviour
     public void LogDecision(bool followed)
     {
         if (currentMazeIndex < 12)
+        {
             followedAdvice[currentMazeIndex] = followed;
             AdjustTokens(followed);
+
+            bool playerChoseRight = followed == suggestionSequence[currentMazeIndex]; // Infer choice
+            dataLogger.LogMazeChoice(currentMazeIndex, suggestionSequence[currentMazeIndex], playerChoseRight, followed, playerTokens);
+        }
     }
 
     public int GetCurrentRoomIndex()

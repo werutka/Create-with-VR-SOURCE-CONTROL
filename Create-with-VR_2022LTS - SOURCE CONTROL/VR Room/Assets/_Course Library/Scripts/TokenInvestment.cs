@@ -52,8 +52,10 @@ public class TokenInvestment : MonoBehaviour
 
     public void ConfirmSelection()
     {
+        int totalTokens = GameObject.Find("Maze Manager").GetComponent<MazeManager>().playerTokens;
+        GameObject.Find("Maze Manager").GetComponent<DataLogger>().LogInvestment(MazeManager.Instance.GetCurrentRoomIndex(), tokenAmount, totalTokens);
+
         Debug.Log("Tokens Invested: " + tokenAmount);
-        // Here you can add logic to store the tokenAmount for the avatar.
 
         // Disable the buttons after confirming
         //minusButton.interactable = false;
