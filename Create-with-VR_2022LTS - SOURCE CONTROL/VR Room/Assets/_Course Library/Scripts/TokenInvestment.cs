@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class TokenInvestment : MonoBehaviour
 {
+    public TextMeshProUGUI instructionText;
     public TextMeshProUGUI tokenAmountText;
     public Button minusButton;
     public Button plusButton;
@@ -15,13 +16,15 @@ public class TokenInvestment : MonoBehaviour
 
     void Start()
     {
+        int availableTokens = GameObject.Find("Maze Manager").GetComponent<MazeManager>().playerTokens;
+
+        instructionText.text = $"You've got {availableTokens} tokens! " +
+            "\r\nPlease choose the number of tokens you want to invest to the avatar. " +
+            "\r\nThe number of tokens will be multiplied by four while being transferred. " +
+            "\r\nAfterwards, the avatar will decide to return to you half of the tokens or none.";
+
         // Update displayed token amount
         UpdateTokenDisplay();
-
-        // Assign button actions
-        //minusButton.onClick.AddListener(DecreaseToken);
-        //plusButton.onClick.AddListener(IncreaseToken);
-        //confirmButton.onClick.AddListener(ConfirmSelection);
     }
 
     public void DecreaseToken()
@@ -35,8 +38,11 @@ public class TokenInvestment : MonoBehaviour
 
     public void IncreaseToken()
     {
-        tokenAmount++;
-        UpdateTokenDisplay();
+        if (tokenAmount < 51) // Ensure it doesn't go above the tokens that the player has
+        {
+            tokenAmount++;
+            UpdateTokenDisplay();
+        }
     }
 
     void UpdateTokenDisplay()
