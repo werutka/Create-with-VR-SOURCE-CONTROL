@@ -18,7 +18,7 @@ public class AvatarFollow : MonoBehaviour
         if (roomIndex == 4) // 5th room (after mistake)
         {
             suggestionText.text = "Oh sorry. I made a mistake. Let's work together to fix it. " +
-                                  (avatarSuggestsRightDoor ? "Take the Right Door" : "Take the Left Door");
+                                  (avatarSuggestsRightDoor ? "\r\nTake the Right Door" : "\r\nTake the Left Door");
         }
         else
         {

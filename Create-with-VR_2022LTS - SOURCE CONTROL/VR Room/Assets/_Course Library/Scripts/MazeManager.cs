@@ -79,15 +79,7 @@ public class MazeManager : MonoBehaviour
             return;
         }
 
-        // After second investment room, go to the final questionnaire and then the final room
-        if (investmentRoom.activeSelf && currentMazeIndex == 13)
-        {
-            DeactivateAllRooms();
-            ActivateRoom(questionnaireRoom);
-            return;
-        }
-
-        if (questionnaireRoom.activeSelf && currentMazeIndex == 13)
+        if (questionnaireRoom.activeSelf && currentMazeIndex == 14)
         {
             DeactivateAllRooms();
             ActivateRoom(finalRoom);
@@ -120,7 +112,7 @@ public class MazeManager : MonoBehaviour
             isQuestionnaireNext = false;
             currentMazeIndex++;
             return;
-        }
+        }        
     }
 
     private void ActivateRoom(GameObject room)
