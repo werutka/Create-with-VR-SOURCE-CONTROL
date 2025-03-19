@@ -10,18 +10,25 @@ public class DoorTrigger : MonoBehaviour
     // Call AdjustTokens
 
     public bool isRightDoor;
-    private AvatarFollow avatar;
-
-    private void Start()
-    {
-        avatar = FindObjectOfType<AvatarFollow>();
-    }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            avatar.PlayerChoice(isRightDoor); //AdjustTokens instead of PlayerChoice? Or UpdateTokenDisplay?? from MazeManager
+            MazeManager mazeManager = MazeManager.Instance;
+            if (mazeManager == null) return;
+
+            int currentRoomIndex = mazeManager.GetCurrentRoomIndex();
+            bool avatarSuggestedRight = mazeManager.GetAvatarSuggestionForRoom(currentRoomIndex);
+
+            // Check if the player followed the avatar's suggestion
+            bool followedAdvice = (isRightDoor == avatarSuggestedRight);
+
+            // Log the decision and adjust tokens
+            mazeManager.LogDecision(followedAdvice);
+
+            // Move to the next room
+            //mazeManager.LoadNextRoom();
         }
     }
 }
