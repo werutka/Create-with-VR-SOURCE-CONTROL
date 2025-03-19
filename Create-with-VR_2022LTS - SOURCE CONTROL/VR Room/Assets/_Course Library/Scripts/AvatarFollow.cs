@@ -15,6 +15,8 @@ public class AvatarFollow : MonoBehaviour
         roomIndex = MazeManager.Instance.GetCurrentRoomIndex();
         avatarSuggestsRightDoor = MazeManager.Instance.GetAvatarSuggestionForRoom(roomIndex);
 
+        Debug.Log($"Avatar Suggestion for Room {roomIndex}: {avatarSuggestsRightDoor}");
+
         if (roomIndex == 4) // 5th room (after mistake)
         {
             suggestionText.text = "Oh sorry. I made a mistake. Let's work together to fix it. " +

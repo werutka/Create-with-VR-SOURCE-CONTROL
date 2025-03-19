@@ -10,25 +10,30 @@ public class DoorTrigger : MonoBehaviour
     // Call AdjustTokens
 
     public bool isRightDoor;
+    private AvatarFollow avatar;
 
-    private void OnTriggerEnter(Collider other)
+    private void Start()
     {
-        if (other.CompareTag("Player"))
+        // Assign avatar reference
+        avatar = FindObjectOfType<AvatarFollow>();
+
+        if (avatar == null)
         {
-            MazeManager mazeManager = MazeManager.Instance;
-            if (mazeManager == null) return;
+            Debug.LogWarning($"No AvatarFollow found in {gameObject.scene.name}. This might be a questionnaire room.");
+        }
+    }
 
-            int currentRoomIndex = mazeManager.GetCurrentRoomIndex();
-            bool avatarSuggestedRight = mazeManager.GetAvatarSuggestionForRoom(currentRoomIndex);
+    public void OnDoorSelected(XRBaseInteractor interactor)
+    {
+        Debug.Log($"Door Selected: {gameObject.name}, IsRightDoor: {isRightDoor}");
 
-            // Check if the player followed the avatar's suggestion
-            bool followedAdvice = (isRightDoor == avatarSuggestedRight);
-
-            // Log the decision and adjust tokens
-            mazeManager.LogDecision(followedAdvice);
-
-            // Move to the next room
-            //mazeManager.LoadNextRoom();
+        if (avatar != null)
+        {
+            avatar.PlayerChoice(isRightDoor); // Call PlayerChoice() with correct door info
+        }
+        else
+        {
+            Debug.LogError("AvatarFollow script reference is missing!");
         }
     }
 }

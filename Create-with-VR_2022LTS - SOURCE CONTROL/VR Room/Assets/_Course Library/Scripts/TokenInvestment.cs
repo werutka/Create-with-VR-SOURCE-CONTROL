@@ -24,7 +24,7 @@ public class TokenInvestment : MonoBehaviour
             "\r\nAfterwards, the avatar will decide to return to you half of the tokens or none.";
 
         // Update displayed token amount
-        UpdateTokenDisplay();
+        UpdateTokens();
     }
 
     public void DecreaseToken()
@@ -32,7 +32,7 @@ public class TokenInvestment : MonoBehaviour
         if (tokenAmount > 0) // Ensure it doesn't go negative
         {
             tokenAmount--;
-            UpdateTokenDisplay();
+            UpdateTokens();
         }
     }
 
@@ -43,11 +43,11 @@ public class TokenInvestment : MonoBehaviour
         if (tokenAmount < availableTokens) // Ensure it doesn't go above the tokens that the player has
         {
             tokenAmount++;
-            UpdateTokenDisplay();
+            UpdateTokens();
         }
     }
 
-    void UpdateTokenDisplay()
+    void UpdateTokens()
     {
         tokenAmountText.text = tokenAmount.ToString();
     }

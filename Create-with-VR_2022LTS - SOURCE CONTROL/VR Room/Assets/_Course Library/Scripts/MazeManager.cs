@@ -158,20 +158,26 @@ public class MazeManager : MonoBehaviour
     {
         int mazeRoomIndex = currentMazeIndex - 1; // Adjust because `currentMazeIndex` increments after LoadNextRoom()
 
+        Debug.Log($"AdjustTokens called - MazeRoomIndex: {mazeRoomIndex}, Followed: {followed}");
+
         if (mazeRoomIndex == 3) // 4th maze room (0-based index)
         {
             playerTokens += followed ? -10 : 5;
+            Debug.Log("4th room rule applied");
         }
         else
         {
             playerTokens += followed ? 5 : -10;
+            Debug.Log("Normal room rule applied");
         }
+        Debug.Log($"New Token Count: {playerTokens}");
         UpdateTokenDisplay();
     }
 
     private void UpdateTokenDisplay()
     {
         tokenText.text = "Tokens: " + playerTokens;
+        Debug.Log("Token UI Updated: " + tokenText.text);
     }
 
     public void LogDecision(bool followed)
@@ -183,6 +189,8 @@ public class MazeManager : MonoBehaviour
 
             bool playerChoseRight = followed == suggestionSequence[currentMazeIndex]; // Infer choice
             dataLogger.LogMazeChoice(currentMazeIndex, suggestionSequence[currentMazeIndex], playerChoseRight, followed, playerTokens);
+
+            UpdateTokenDisplay();
         }
     }
 
