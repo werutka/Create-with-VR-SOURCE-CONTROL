@@ -7,7 +7,7 @@ using UnityEngine.AI;
 public class AvatarFollow : MonoBehaviour
 {
     public TextMeshProUGUI suggestionText;
-    private bool avatarSuggestsRightDoor;
+    public bool avatarSuggestsRightDoor;
     private int roomIndex;
 
     private void Start()
@@ -26,12 +26,5 @@ public class AvatarFollow : MonoBehaviour
         {
             suggestionText.text = avatarSuggestsRightDoor ? "Take the Right Door" : "Take the Left Door";
         }
-    }
-
-    public void PlayerChoice(bool choseRight)
-    {
-        bool followed = (choseRight == avatarSuggestsRightDoor);
-        MazeManager.Instance.LogDecision(followed);
-        MazeManager.Instance.LoadNextRoom();
     }
 }

@@ -29,7 +29,10 @@ public class DoorTrigger : MonoBehaviour
 
         if (avatar != null)
         {
-            avatar.PlayerChoice(isRightDoor); // Call PlayerChoice() with correct door info
+            MazeManager.Instance.LogDecision(isRightDoor); // Log decision
+            MazeManager.Instance.LoadNextRoom(); // Proceed to next room
+            
+            Debug.Log($"Avatar Suggests Right Door: {avatar.avatarSuggestsRightDoor}, Player Chose Right Door: {isRightDoor}");
         }
         else
         {

@@ -180,15 +180,19 @@ public class MazeManager : MonoBehaviour
         Debug.Log("Token UI Updated: " + tokenText.text);
     }
 
-    public void LogDecision(bool followed)
+    public void LogDecision(bool isRightDoor)
     {
         if (currentMazeIndex < 12)
         {
-            followedAdvice[currentMazeIndex] = followed;
+            // Get the avatar's suggestion for the current room
+            bool avatarSuggestedRightDoor = suggestionSequence[currentMazeIndex];
+
+            // Determine if the player followed the avatar's suggestion
+            bool followed = (isRightDoor == avatarSuggestedRightDoor);
+
             AdjustTokens(followed);
 
-            bool playerChoseRight = followed == suggestionSequence[currentMazeIndex]; // Infer choice
-            dataLogger.LogMazeChoice(currentMazeIndex, suggestionSequence[currentMazeIndex], playerChoseRight, followed, playerTokens);
+            dataLogger.LogMazeChoice(currentMazeIndex, avatarSuggestedRightDoor, isRightDoor, followed, playerTokens);
 
             UpdateTokenDisplay();
         }
