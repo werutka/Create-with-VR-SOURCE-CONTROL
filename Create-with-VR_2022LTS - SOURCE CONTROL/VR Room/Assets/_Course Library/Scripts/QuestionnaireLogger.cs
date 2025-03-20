@@ -8,10 +8,8 @@ using UnityEngine.Events;
 
 public class QuestionnaireLogger : MonoBehaviour
 {
-    public ToggleGroup question1Group;
-    public ToggleGroup question2Group;
-
-    public Button submitButton;
+    public ToggleGroup faithAnswers;
+    public ToggleGroup trustAnswers;
 
     private DataLogger dataLogger;
 
@@ -19,14 +17,12 @@ public class QuestionnaireLogger : MonoBehaviour
     void Start()
     {
         dataLogger = FindObjectOfType<DataLogger>();
-
-        submitButton.onClick.AddListener(LogQuestionnaireAnswers);
     }
 
-    void LogQuestionnaireAnswers()
+    public void LogQuestionnaireAnswers()
     {
-        string answer1 = GetSelectedToggle(question1Group);
-        string answer2 = GetSelectedToggle(question2Group);
+        string answer1 = GetSelectedToggle(faithAnswers);
+        string answer2 = GetSelectedToggle(trustAnswers);
 
         if (MazeManager.Instance != null)
         {
@@ -40,7 +36,12 @@ public class QuestionnaireLogger : MonoBehaviour
 
     string GetSelectedToggle(ToggleGroup group)
     {
-        Toggle selected = group.ActiveToggles().FirstOrDefault();
-        return selected ? selected.GetComponentInChildren<TextMeshProUGUI>().text : "No Answer";
+        Toggle selectedToggle = group.ActiveToggles().FirstOrDefault();
+        if (selectedToggle != null)
+        {
+            TextMeshProUGUI textComponent = selectedToggle.GetComponentInChildren<TextMeshProUGUI>();
+            return textComponent != null ? textComponent.text : "No Answer";
+        }
+        return "No Answer";
     }
 }
