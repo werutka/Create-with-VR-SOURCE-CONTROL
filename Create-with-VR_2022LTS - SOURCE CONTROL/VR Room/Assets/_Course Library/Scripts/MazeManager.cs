@@ -160,7 +160,7 @@ public class MazeManager : MonoBehaviour
 
         Debug.Log($"AdjustTokens called - MazeRoomIndex: {mazeRoomIndex}, Followed: {followed}");
 
-        if (mazeRoomIndex == 3) // 4th maze room (0-based index)
+        if (mazeRoomIndex == 4) // 4th maze room (0-based index)
         {
             playerTokens += followed ? -10 : 5;
             Debug.Log("4th room rule applied");
