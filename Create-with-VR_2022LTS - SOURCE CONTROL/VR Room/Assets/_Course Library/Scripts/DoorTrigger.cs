@@ -34,6 +34,7 @@ public class DoorTrigger : MonoBehaviour
 
             // Trigger the DoorOpen sound
             AudioManager.Instance.PlaySound(SoundID.DoorOpen);
+            Debug.Log("Playing sound: DoorOpen");
 
             Debug.Log($"Avatar Suggests Right Door: {avatar.avatarSuggestsRightDoor}, Player Chose Right Door: {isRightDoor}");
         }
