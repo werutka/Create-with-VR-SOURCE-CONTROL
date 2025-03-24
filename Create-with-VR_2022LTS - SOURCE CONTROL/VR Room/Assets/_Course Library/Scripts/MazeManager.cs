@@ -130,6 +130,11 @@ public class MazeManager : MonoBehaviour
             {
                 ResetQuestionnaireCanvas();
             }
+
+            if (room == investmentRoom)
+            {
+                ResetInvestmentCanvas();
+            }
         }
     }
 
@@ -151,6 +156,15 @@ public class MazeManager : MonoBehaviour
         if (questionnaireCanvas != null)
         {
             questionnaireCanvas.gameObject.SetActive(true);
+        }
+    }
+
+    private void ResetInvestmentCanvas()
+    {
+        Canvas investmentCanvas = investmentRoom.GetComponentInChildren<Canvas>(true);
+        if (investmentCanvas != null)
+        {
+            investmentCanvas.gameObject.SetActive(true);
         }
     }
 
