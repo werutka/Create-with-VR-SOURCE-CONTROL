@@ -31,7 +31,10 @@ public class DoorTrigger : MonoBehaviour
         {
             MazeManager.Instance.LogDecision(isRightDoor); // Log decision
             MazeManager.Instance.LoadNextRoom(); // Proceed to next room
-            
+
+            // Trigger the DoorOpen sound
+            AudioManager.Instance.PlaySound(SoundID.DoorOpen);
+
             Debug.Log($"Avatar Suggests Right Door: {avatar.avatarSuggestsRightDoor}, Player Chose Right Door: {isRightDoor}");
         }
         else

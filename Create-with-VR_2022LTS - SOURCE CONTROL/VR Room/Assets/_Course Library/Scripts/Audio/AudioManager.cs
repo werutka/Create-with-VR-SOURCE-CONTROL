@@ -70,6 +70,14 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    // Play the specific AmbOffice sound
+    public void PlayAmbOfficeSound()
+    {
+        // Play the sound with the SoundID AmbOffice
+        PlaySound(SoundID.AmbOffice);
+        Debug.Log("Playing AmbOffice sound.");
+    }
+
     // Stop any currently playing audio
     public void StopAudio()
     {
@@ -83,4 +91,6 @@ public class AudioManager : MonoBehaviour
             Debug.LogWarning("No audio is currently playing.");
         }
     }
+
+
 }

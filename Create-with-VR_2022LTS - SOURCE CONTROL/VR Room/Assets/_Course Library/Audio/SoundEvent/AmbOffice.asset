@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c15a1a0622ac34e2f833fa5550cb930d, type: 3}
   m_Name: AmbOffice
   m_EditorClassIdentifier: 
-  soundID: 0
-  audioClip: {fileID: 0}
-  volume: 1
+  soundID: 1
+  audioClip: {fileID: 8300000, guid: 35cc403b7de544c07a67825ccf2f7408, type: 3}
+  volume: 0.5
   pitch: 1
-  loop: 0
+  loop: 1
