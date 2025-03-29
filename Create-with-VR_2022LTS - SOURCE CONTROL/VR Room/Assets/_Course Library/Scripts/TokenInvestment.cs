@@ -14,9 +14,13 @@ public class TokenInvestment : MonoBehaviour
 
     private int tokenAmount = 25; // Default value
 
+    private MazeManager mazeManager;
+
     void Start()
     {
-        int availableTokens = GameObject.Find("Maze Manager").GetComponent<MazeManager>().playerTokens;
+        mazeManager = GameObject.Find("Maze Manager").GetComponent<MazeManager>();
+
+        int availableTokens = mazeManager.playerTokens;
 
         instructionText.text = $"You've got {availableTokens} tokens! " +
             "\r\nPlease choose the number of tokens you want to invest to the avatar. " +
@@ -38,7 +42,7 @@ public class TokenInvestment : MonoBehaviour
 
     public void IncreaseToken()
     {
-        int availableTokens = GameObject.Find("Maze Manager").GetComponent<MazeManager>().playerTokens;
+        int availableTokens = mazeManager.playerTokens;
 
         if (tokenAmount < availableTokens) // Ensure it doesn't go above the tokens that the player has
         {
@@ -54,10 +58,15 @@ public class TokenInvestment : MonoBehaviour
 
     public void ConfirmSelection()
     {
-        int totalTokens = GameObject.Find("Maze Manager").GetComponent<MazeManager>().playerTokens;
-        GameObject.Find("Maze Manager").GetComponent<DataLogger>().LogInvestment(MazeManager.Instance.GetCurrentRoomIndex(), tokenAmount, totalTokens);
+        int totalTokens = mazeManager.playerTokens;
+        mazeManager.GetComponent<DataLogger>().LogInvestment(MazeManager.Instance.GetCurrentRoomIndex(), tokenAmount, totalTokens);
 
         Debug.Log("Tokens Invested: " + tokenAmount);
+
+        //Update Token Display: decrease it with the number of invested tokens
+        mazeManager.playerTokens -= tokenAmount;
+        
+        mazeManager.UpdateTokenDisplay();
 
         // Disable the buttons after confirming
         //minusButton.interactable = false;

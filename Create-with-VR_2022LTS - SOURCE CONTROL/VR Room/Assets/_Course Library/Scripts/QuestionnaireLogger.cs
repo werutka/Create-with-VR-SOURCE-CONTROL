@@ -1,9 +1,10 @@
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
-using System.Collections.Generic;
 
 public class QuestionnaireLogger : MonoBehaviour
 {
@@ -33,14 +34,26 @@ public class QuestionnaireLogger : MonoBehaviour
         Debug.Log($"Questionnaire Answers Logged: {answer1}, {answer2}");
     }
 
-    string GetSelectedToggle(System.Collections.Generic.IEnumerable<UnityEngine.UI.Toggle> group)
+    string GetSelectedToggle(ToggleGroup toggleGroup)
     {
-        Toggle selectedToggle = group.ActiveToggles().FirstOrDefault();
-        if (selectedToggle != null)
+        var group = toggleGroup.ActiveToggles();
+
+        foreach (var toggle in group)
         {
-            TextMeshProUGUI textComponent = selectedToggle.GetComponentInChildren<TextMeshProUGUI>();
-            return textComponent != null ? textComponent.text : "No Answer";
+            if (toggle.isOn)
+            {
+                TextMeshProUGUI textComponent = toggle.GetComponentInChildren<TextMeshProUGUI>();
+                return textComponent != null ? textComponent.text : "No Text Found";
+            }
         }
         return "No Answer";
+        
+        //Toggle selectedToggle = group.GetActive();
+        //if (selectedToggle != null)
+        {
+            //TextMeshProUGUI textComponent = selectedToggle.GetComponentInChildren<TextMeshProUGUI>();
+            //return textComponent != null ? textComponent.text : "No Answer";
+        }
+        //return "No Answer";
     }
 }

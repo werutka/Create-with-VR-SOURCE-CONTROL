@@ -188,7 +188,7 @@ public class MazeManager : MonoBehaviour
         UpdateTokenDisplay();
     }
 
-    private void UpdateTokenDisplay()
+    public void UpdateTokenDisplay()
     {
         tokenText.text = "Tokens: " + playerTokens;
         Debug.Log("Token UI Updated: " + tokenText.text);
