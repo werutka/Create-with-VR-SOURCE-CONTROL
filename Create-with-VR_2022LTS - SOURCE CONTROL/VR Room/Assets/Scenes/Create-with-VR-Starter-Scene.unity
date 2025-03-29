@@ -35175,7 +35175,7 @@ PrefabInstance:
     - target: {fileID: 4569049315738153744, guid: 991f7faf3818ce24d854dd90bfceb80b,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5233705834758725502, guid: 991f7faf3818ce24d854dd90bfceb80b,
         type: 3}
@@ -42051,8 +42051,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_text: "Please choose the number of tokens you want to invest to the avatar. \nThe
-    number of tokens will be multiplied by four while being transferred. \nAfterwards,
-    the avatar will decide to return to you half of the tokens or none."
+    number of tokens will be multiplied by four while being transferred. \nAfter
+    the experiment, the avatar will decide to return to you half of the tokens or
+    none."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -44963,7 +44964,7 @@ PrefabInstance:
     - target: {fileID: 2326296847141543272, guid: 880db112787483b4bb85a9812586967c,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3497238646344348209, guid: 880db112787483b4bb85a9812586967c,
         type: 3}

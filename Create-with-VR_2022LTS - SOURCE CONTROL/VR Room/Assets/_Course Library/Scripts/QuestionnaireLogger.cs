@@ -1,10 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
+using System.Collections.Generic;
 
 public class QuestionnaireLogger : MonoBehaviour
 {
@@ -34,7 +33,7 @@ public class QuestionnaireLogger : MonoBehaviour
         Debug.Log($"Questionnaire Answers Logged: {answer1}, {answer2}");
     }
 
-    string GetSelectedToggle(ToggleGroup group)
+    string GetSelectedToggle(System.Collections.Generic.IEnumerable<UnityEngine.UI.Toggle> group)
     {
         Toggle selectedToggle = group.ActiveToggles().FirstOrDefault();
         if (selectedToggle != null)
